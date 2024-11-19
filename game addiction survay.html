@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up and Game Addiction Survey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #218838;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .survey-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            display: none;
+            overflow-y: auto;
+            max-height: 80vh;
+            padding-bottom: 20px;
+        }
+        .survey-container h2 {
+            margin-bottom: 30px;
+        }
+        .survey-container form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .survey-container form label {
+            font-size: 14px;
+            color: #555;
+        }
+        .survey-container form input[type="text"], .survey-container form input[type="number"], .survey-container form textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .survey-container form input[type="radio"] {
+            margin-right: 10px;
+        }
+        .survey-container form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .survey-container form button:hover {
+            background-color: #0056b3;
+        }
+        .survey-container form .submit-button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Container -->
+    <div class="container" id="loginContainer">
+        <h2>Login</h2>
+        <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+            <div class="form-group">
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" name="email" required placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="login-username">Username:</label>
+                <input type="text" id="login-username" name="username" required placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" name="password" required placeholder="Enter your password">
+            </div>
+            <div class="form-group">
+                <button type="submit">Login</button>
+            </div>
+            <div class="error-message" id="loginErrorMessage"></div>
+        </form>
+
+        <div class="footer">
+            <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign up here</a></p>
+        </div>
+    </div>
+
+    <!-- Sign Up Container -->
+    <div class="container" id="signUpContainer" style="display: none;">
+        <h2>Sign Up</h2>
+        <form id="signUpForm" onsubmit="handleSignUpSubmit(event)">
+            <div class="form-group">
+                <label for="new-email">Email:</label>
+                <input type="email" id="new-email" name="email" required placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="new-username">Username:</label>
+                <input type="text" id="new-username" name="new-username" required placeholder="Create a username">
+            </div>
+            <div class="form-group">
+                <label for="new-password">Password:</label>
+                <input type="password" id="new-password" name="new-password" required placeholder="Create a password">
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required placeholder="Confirm your password">
+            </div>
+            <div class="form-group">
+                <button type="submit">Sign Up</button>
+            </div>
+        </form>
+
+        <div class="footer">
+            <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
+        </div>
+    </div>
+
+    <!-- Survey Container -->
+    <div class="survey-container" id="surveyContainer">
+        <h2>Game Addiction Survey</h2>
+        <form id="surveyForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required placeholder="Enter your age">
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+
+            <div class="form-group">
+                <label>How many hours do you spend on gaming per day?</label><br>
+                <input type="radio" id="hours1" name="gaming_hours" value="1-2 hours">
+                <label for="hours1">1-2 hours</label><br>
+                <input type="radio" id="hours2" name="gaming_hours" value="3-5 hours">
+                <label for="hours2">3-5 hours</label><br>
+                <input type="radio" id="hours3" name="gaming_hours" value="5+ hours">
+                <label for="hours3">5+ hours</label><br>
+            </div>
+
+            <div class="form-group">
+                <label for="favorite_game">What is your favorite game?</label>
+                <input type="text" id="favorite_game" name="favorite_game" required placeholder="Enter your favorite game">
+            </div>
+
+            <div class="form-group">
+                <label>Do you feel gaming affects your studies/work?</label><br>
+                <input type="radio" id="study_effect1" name="study_effect" value="Yes">
+                <label for="study_effect1">Yes</label><br>
+                <input type="radio" id="study_effect2" name="study_effect" value="No">
+                <label for="study_effect2">No</label><br>
+            </div>
+
+            <div class="form-group">
+                <label for="gaming_friends">Do you play games with friends?</label><br>
+                <input type="radio" id="friends1" name="gaming_friends" value="Yes">
+                <label for="friends1">Yes</label><br>
+                <input type="radio" id="friends2" name="gaming_friends" value="No">
+                <label for="friends2">No</label><br>
+            </div>
+
+            <div class="form-group">
+                <label for="gaming_impact">Has gaming ever affected your health (sleep, mental well-being)?</label><br>
+                <input type="radio" id="impact1" name="gaming_impact" value="Yes">
+                <label for="impact1">Yes</label><br>
+                <input type="radio" id="impact2" name="gaming_impact" value="No">
+                <label for="impact2">No</label><br>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="submit-button">Submit Survey</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Simulate a "database" of users (hardcoded)
+        const users = [
+            { email: "user1@example.com", username: "user1", password: "password123" },
+            { email: "user2@example.com", username: "user2", password: "password456" }
+        ];
+
+        // Show Sign Up form
+        function showSignUp() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('signUpContainer').style.display = 'block';
+        }
+
+        // Show Login form
+        function showLogin() {
+            document.getElementById('signUpContainer').style.display = 'none';
+            document.getElementById('surveyContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('loginErrorMessage').textContent = ""; // Clear error message
+        }
+
+        // Show Survey form
+        function showSurvey() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('signUpContainer').style.display = 'none';
+            document.getElementById('surveyContainer').style.display = 'block';
+        }
+
+        // Handle Login Form Submission
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            // Check if the email exists and the password matches
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                alert("Login successful!");
+                showSurvey(); // Show the survey page after successful login
+            } else {
+                document.getElementById('loginErrorMessage').textContent = "Incorrect email or password. Please try again.";
+            }
+        }
+
+        // Handle Sign Up Form Submission
+        function handleSignUpSubmit(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('new-email').value;
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            // Add new user to the "database"
+            users.push({ email: email, username: username, password: password });
+
+            console.log(`New User: ${email}, ${username}`);
+
+            // Hide sign up form and show survey page
+            document.getElementById('signUpContainer').style.display = 'none';
+            showSurvey(); // Automatically show survey after sign-up
+        }
+
+        // Handle Survey Submission
+        document.getElementById('surveyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert("Thank you for completing the survey!");
+        });
+    </script>
+</body>
+</html>
